@@ -1,24 +1,30 @@
 #include <iostream>
+#include <string>
+
 using namespace std;
 
 struct Produk {
     int id;
     string nama;
-    string kategori;
     int stok;
     int harga;
 };
 
 struct kategori {
     string nama_kategori;
-    struct Produk produk[100];
+    struct Produk produk[10];
+    int jum_produk = 0;
 
 };
 
 struct rak {
     string nama_rak;
-    struct kategori kategori1[100];
+    struct kategori kategori1[10];
+    int jum_kategori = 0;
 };
+
+rak rak1[100];
+int total_rak = 0;
 
 int binarySearch(Produk arr[], int kiri, int kanan, int x) {
     if (kanan >= kiri) {
@@ -37,8 +43,6 @@ int binarySearch(Produk arr[], int kiri, int kanan, int x) {
 }
 
 int main(){
-    cout <<  "hello\n";
-    rak rak1[100];
     string username, password;
     int salah = 0;
 
@@ -62,97 +66,131 @@ int main(){
 
     cout << "Login successful!" << endl;
     int menu;
-    int jum_produk, jum_kategori, jum_rak;
-
-    cout << "== manajemen produk ==" << endl;
-    cout << "menu : " << endl;
-    cout << " 1. input data barang" << endl;
-    cout << " 2. tampilkan data barang(sorted)" << endl;
-    cout << " 3. cari produk berdasarkan id" << endl;
-    cout << " 4. tampilan stok produk berdasarkan kategori" << endl;
-    cout << " 5. ubah detail produk" << endl;
-    cout << " 6. hapus produk(berdasarkan id)" << endl;
-    cout << " 7. keluar" << endl;
-    cout << "pilih menu :";
+     
+    do {
+    cout << "\n== Manajemen Produk Toko ==" << endl;
+    cout << "MENU UTAMA" << endl;
+    cout << " 1. Input data barang" << endl;
+    cout << " 2. Tampilkan data barang (sorted)" << endl;
+    cout << " 3. Cari produk berdasarkan id" << endl;
+    cout << " 4. Ubah detail produk" << endl;
+    cout << " 5. Keluar" << endl;
+    cout << "Pilih menu: ";
     cin >> menu;
 
     switch (menu){
         case 1: {
-          
-            cout << "=== Input Data Barang ===" << endl;
-            cout << "berapa bnyak rak yang ingin  ditambahkan? ";
-            cin >> jum_rak;
-            for (int i = 0; i < jum_rak; i++){
+            cout << "\n===== INPUT DATA BARANG =====" << endl;
+            cout << "Berapa banyak rak yang ingin ditambahkan? ";
+            cin >> total_rak;
+            for (int i = 0; i < total_rak; i++) {
                 cout << "Masukkan nama rak: ";
                 cin >> rak1[i].nama_rak;
-                cout << "berapa bnyak kategori yang ingin  ditambahkan? ";
-                cin >> jum_kategori;
-                for (int j = 0; j < jum_kategori; j++){
+                cout << "Berapa banyak kategori yang ingin ditambahkan? ";
+                cin >> rak1[i].jum_kategori;
+                for (int j = 0; j < rak1[i].jum_kategori; j++){
                     cout << "Masukkan nama kategori: ";
                     cin >> rak1[i].kategori1[j].nama_kategori;
-                    cout << "berapa banyak data yang ingin diinput? ";
-                    cin >> jum_produk;
-                    for (int k = 0; k < jum_produk; k++){
-                        cout << "Masukkan data produk ke-" << i + 1 << ":" << endl;
+                    cout << "Berapa banyak data yang ingin diinput? ";
+                    cin >> rak1[i].kategori1[j].jum_produk;
+                    for (int k = 0; k < rak1[i].kategori1[j].jum_produk; k++){
+                        cout << "\nPRODUK ke-" << k + 1 << ":\n";
                         cout << "ID: "; cin >> rak1[i].kategori1[j].produk[k].id;
-                        cout << "Nama: "; cin >> rak1[i].kategori1[j].produk[k].nama;
-                        cout << "Kategori: "; cin >> rak1[i].kategori1[j].produk[k].kategori;
+                        cout << "Nama: "; getline(cin >> ws, rak1[i].kategori1[j].produk[k].nama);
                         cout << "Stok: "; cin >> rak1[i].kategori1[j].produk[k].stok;
                         cout << "Harga: "; cin >> rak1[i].kategori1[j].produk[k].harga;
                     }
-                }
-            }
-
-            for (int i = 0; i < jum_produk - 1; i++){
-                for (int j = 0; j < jum_produk - (i+1); j++ ){
-                    for (int k = 0; k < jum_produk - (i+1); k++){
-                        if (rak1[i].kategori1[j].produk[k].id > rak1[i].kategori1[j].produk[k+1].id){
-                        Produk temp = rak1[i].kategori1[j].produk[k];
-                        rak1[i].kategori1[j].produk[k] = rak1[i].kategori1[j].produk[k+1];
-                        rak1[i].kategori1[j].produk[k+1] = temp;
+                
+                    int n = rak1[i].kategori1[j].jum_produk;
+                    for (int a = 0; a < n - 1; a++) {
+                        for (int b = 0; b < n - a - 1; b++) {
+                            if (rak1[i].kategori1[j].produk[b].id > rak1[i].kategori1[j].produk[b+1].id) {
+                                Produk temp = rak1[i].kategori1[j].produk[b];
+                                rak1[i].kategori1[j].produk[b] = rak1[i].kategori1[j].produk[b+1];
+                                rak1[i].kategori1[j].produk[b+1] = temp;
+                            }
                         }
                     }
                 }
-
-            }
-            break;
+            }    
+        break;
         } case 2: {
-            cout << "tampilkan data barang(sorted)" << endl;
-            for (int i = 0; i < jum_rak; i++){
+            cout << "\n===== DAFTAR PRODUK (SORTED) =====" << endl;
+            for (int i = 0; i < total_rak; i++) {
+                cout << "==============================\n";
                 cout << "Rak: " << rak1[i].nama_rak << endl;
-                for (int j = 0; j < jum_kategori; j++){
+                for (int j = 0; j < rak1[i].jum_kategori; j++) {
                     cout << "Kategori: " << rak1[i].kategori1[j].nama_kategori << endl;
-                    for (int k = 0; k < jum_produk; k++){
+                    for (int k = 0; k < rak1[i].kategori1[j].jum_produk; k++){
+                        cout << k+1 << ". \n";
                         cout << "ID: " << rak1[i].kategori1[j].produk[k].id << endl;
                         cout << "Nama: " << rak1[i].kategori1[j].produk[k].nama << endl;
-                        cout << "Kategori: " << rak1[i].kategori1[j].produk[k].kategori << endl;
                         cout << "Stok: " << rak1[i].kategori1[j].produk[k].stok << endl;
                         cout << "Harga: " << rak1[i].kategori1[j].produk[k].harga << endl;
+                        cout << "-----" << endl;
                     }
                 }
             }
-            break;
-        }case 3: {
-            int id_cari;
-            cout << "masukkan id produk yang ingin dicari: ";
+        break;
+        } case 3: {
+            int id_cari, ketemu;
+            bool ditemukan = false;
+            cout << "\n===== CARI PRODUK DENGAN ID =====\n";
+            cout << "Masukkan id produk yang ingin dicari: ";
             cin >> id_cari;
-            binarySearch(rak1[0].kategori1[0].produk, 0, jum_produk - 1, id_cari);
+            for (int a = 0; a < total_rak; a++) {
+                for (int b = 0; b < rak1[a].jum_kategori; b++) {
+                    ketemu = binarySearch(rak1[a].kategori1[b].produk, 0, rak1[a].kategori1[b].jum_produk - 1, id_cari);
+
+                    if (ketemu != -1) {
+                        cout << "Ditemukan! Detail produk: \n";
+                        cout << "ID: " << rak1[a].kategori1[b].produk[ketemu].id << endl;
+                        cout << "Nama: " << rak1[a].kategori1[b].produk[ketemu].nama << endl;
+                        cout << "Stok: " << rak1[a].kategori1[b].produk[ketemu].stok << endl;
+                        cout << "Harga: " << rak1[a].kategori1[b].produk[ketemu].harga << endl;
+                        ditemukan = true;
+                        break;
+                    } 
+                    
+                    if (ditemukan) break;
+                }
+            }
+            if (!ditemukan) {
+                cout << "Maaf, produk dengan id " << id_cari << "tidak ada.\n";
+            }
+        break;
+        } case 4:{
+            int idUbah, stokBaru, hargaBaru;
+            string namaBaru;
+            bool found = false;
+
+            cout << "\n===== UBAH DETAIL PRODUK (SELAIN ID)=====" << endl;
+            cout << "[NOTE]: Tidak boleh mengubah ID Produk sebelumnya!\n";
+            cout << "\nMasukkan id produk yang ingin diubah: "; cin >> idUbah;
+
+            for (int a = 0; a < total_rak; a++) {
+                for (int b = 0; b < rak1[a].jum_kategori; b++) {
+                    for (int c = 0; c < rak1[a].kategori1[b].jum_produk; c++) {
+                        if (rak1[a].kategori1[b].produk[c].id == idUbah) {
+                            cout << "Data ditemukan!\n"; 
+                            cout << "Masukkan Nama Baru: "; getline(cin >> ws, rak1[a].kategori1[b].produk[c].nama);
+                            cout << "Stok Baru: "; cin >> rak1[a].kategori1[b].produk[c].stok;
+                            cout << "Harga Baru: "; cin >> rak1[a].kategori1[b].produk[c].harga;
+                            found = true;
+                            break; 
+                        }
+                    }
+                }
+            }
+            if (!found) cout << "ID tidak ditemukan di seluruh rak!\n";
             break;
-        }case 4:{
-            cout << "tampilan stok produk berdasarkan kategori" << endl;
+        } case 5:{
+            cout << "Program akan berhenti, keluar dari program.\n" << endl;
+            return 0;
             break;
-        }case 5:{
-            cout << "ubah detail produk" << endl;
-            break;
-        }case 6:{
-            cout << "hapus produk(berdasarkan id)" << endl;
-            break;
-        }case 7:{
-            cout << "keluar" << endl;
-            break;
-        }default:{
-            cout << "pilihan tidak valid" << endl;
+        } default:{
+            cout << "Pilihan tidak valid! Coba lagi." << endl;
         }
     }
-    
+    } while (menu != 6);    
 }
